@@ -53,28 +53,13 @@ export async function startModFromImport(baseUrl: URL): Promise<ExitCallback> {
 
 export async function startModFromSubprocess(baseUrl: URL): Promise<ExitCallback> {
 	const entryUrl = new URL('./dist/server/entry.mjs', baseUrl);
-	// const proc = Deno.run({
-	// 	cmd: ['deno', 'run', '--allow-env', '--allow-net', fromFileUrl(entryUrl)],
-	// 	cwd: fromFileUrl(baseUrl),
-	// 	stderr: 'piped',
-	// });
+	const proc = Deno.run({
+		cmd: ['deno', 'run', '--allow-env', '--allow-net', fromFileUrl(entryUrl)],
+		cwd: fromFileUrl(baseUrl),
+		stderr: 'piped',
+	});
 
-	const proc = createCommand(
-		[
-			"deno",
-			"run",
-			"--allow-env",
-			"--allow-net",
-			fromFileUrl(entryUrl),
-		],
-		{
-			cwd: fromFileUrl(baseUrl),
-			stderr: "piped",
-		},
-	).spawn();
-
-
-	const stderr = proc.stderr;
+	const stderr = readableStreamFromReader(proc.stderr);
 	const dec = new TextDecoder();
 	for await (const bytes of stderr) {
 		const msg = dec.decode(bytes);
@@ -83,12 +68,7 @@ export async function startModFromSubprocess(baseUrl: URL): Promise<ExitCallback
 		}
 	}
 
-	return () => {
-		// await proc.stdin?.close();
-		// await proc.status; // Ensure any pending operation completes
-		// proc.kill();
-		proc.kill();
-	};
+	return () => proc.close();
 }
 
 export async function runBuildAndStartApp(fixturePath: string) {
