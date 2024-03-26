@@ -8,19 +8,20 @@ on:
 
 jobs:
   test:
-    name: Test on ${{ matrix.os }}
+    name: Test on ${{ matrix.os }} with Deno ${{ matrix.deno_version }}
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
+        deno_version: [1.35, "latest"]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Clone repository
         uses: actions/checkout@v3
-      
-      - name: Setup Deno 1.35
+
+      - name: Setup Deno ${{ matrix.deno_version }}
         uses: denoland/setup-deno@v1
         with:
-          deno-version: v1.35
+          deno-version: ${{ matrix.deno_version }}
 
       - name: Setup PNPM
         uses: pnpm/action-setup@v2
@@ -39,3 +40,9 @@ jobs:
 
       - name: Test
         run: pnpm test
+
+      - name: Check Format
+        run: pnpm format:check
+
+      - name: Lint
+        run: pnpm lint

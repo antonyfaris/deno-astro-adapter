@@ -1,6 +1,10 @@
 {
   "fmt": {
     "include": ["test/**/*.ts"],
-    "exclude": ["src/fixtures/**/*.ts"]
+    "exclude": ["test/fixtures/**/*.ts"]
+  },
+  "lint": {
+    "include": ["test/**/*.ts"],
+    "exclude": ["test/fixtures/**/*.ts"]
   }
 }
