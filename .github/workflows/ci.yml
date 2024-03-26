@@ -7,16 +7,16 @@ on:
     branches: [main]
 
 jobs:
-  test:
+  CI:
     name: Test on ${{ matrix.os }} with Deno ${{ matrix.deno_version }}
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
-        deno_version: [1.35, "latest"]
+        deno_version: [1.35, 1.41.0]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Clone repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Deno ${{ matrix.deno_version }}
         uses: denoland/setup-deno@v1
