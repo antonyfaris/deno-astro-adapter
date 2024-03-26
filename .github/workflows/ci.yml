@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
-        deno_version: [1.35, 1.41.0]
+        deno_version: [1.35, 1.x]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Clone repository
