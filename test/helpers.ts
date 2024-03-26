@@ -12,7 +12,7 @@ export const defaultTestPermissions: Deno.PermissionOptions = {
   env: true,
 };
 
-declare type ExitCallback = () => void;
+type ExitCallback = () => void;
 
 function createCommand(
   args: string[],
