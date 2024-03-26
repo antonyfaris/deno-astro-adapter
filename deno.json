@@ -1,0 +1,6 @@
+{
+  "fmt": {
+    "include": ["test/**/*.ts"],
+    "exclude": ["src/fixtures/**/*.ts"]
+  }
+}
