@@ -113,7 +113,7 @@ const libsqlImportReplacePlugin = {
     // Replace libsql client import with the Deno compatible version
     build.onResolve({ filter }, (args) => {
       return {
-        path: "npm:@libsql/client/node",
+        path: "npm:@libsql/client/web",
         external: true,
       };
     });
