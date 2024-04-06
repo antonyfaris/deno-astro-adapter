@@ -31,14 +31,14 @@
     "lint": "deno lint"
   },
   "dependencies": {
-    "esbuild": "^0.19.2"
+    "esbuild": "^0.20.2"
   },
   "peerDependencies": {
     "astro": "^4.2.1"
   },
   "devDependencies": {
-    "@types/node": "^20.11.5",
-    "astro": "^4.2.1",
-    "typescript": "^5.3.3"
+    "@types/node": "^20.12.5",
+    "astro": "^4.5.16",
+    "typescript": "^5.4.4"
   }
 }

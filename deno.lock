@@ -113,10 +113,10 @@
   "workspace": {
     "packageJson": {
       "dependencies": [
-        "npm:@types/node@^20.11.5",
-        "npm:astro@^4.2.1",
-        "npm:esbuild@^0.19.2",
-        "npm:typescript@^5.3.3"
+        "npm:@types/node@^20.12.5",
+        "npm:astro@^4.5.16",
+        "npm:esbuild@^0.20.2",
+        "npm:typescript@^5.4.4"
       ]
     }
   }
