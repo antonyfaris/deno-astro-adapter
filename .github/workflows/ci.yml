@@ -13,7 +13,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest]
-        deno_version: [1.40, 1.x]
+        deno_version: [1.40.x, 1.x]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Clone repository
