@@ -1,5 +1,5 @@
 import { fromFileUrl } from "https://deno.land/std@0.110.0/path/mod.ts";
-import { assert } from "https://deno.land/std@0.158.0/testing/asserts.ts";
+import { assert } from "https://deno.land/std@0.221.0/assert/assert.ts";
 import { readableStreamFromReader } from "https://deno.land/std@0.142.0/streams/conversion.ts";
 
 const dir = new URL("./", import.meta.url);
