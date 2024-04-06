@@ -1,7 +1,7 @@
 // Normal Imports
 import type { SSRManifest } from "astro";
 import { App } from "astro/app";
-import type { Options } from "./types";
+import type { Options } from "./types.ts";
 
 // @ts-expect-error
 import {
@@ -88,15 +88,17 @@ export function start(manifest: SSRManifest, options: Options) {
     }
   };
 
+  const hostname = options.hostname ?? "0.0.0.0";
+
   const port = options.port ?? 8085;
   _server = new Server({
     port,
-    hostname: options.hostname ?? "0.0.0.0",
+    hostname,
     handler,
   });
 
   _startPromise = Promise.resolve(_server.listenAndServe());
-  console.error(`Server running on port ${port}`);
+  console.error(`Server running on port http://${hostname}:${port}`);
 }
 
 export function createExports(manifest: SSRManifest, options: Options) {
