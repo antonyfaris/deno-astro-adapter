@@ -98,7 +98,8 @@ export function start(manifest: SSRManifest, options: Options) {
   });
 
   _startPromise = Promise.resolve(_server.listenAndServe());
-  console.error(`Server running on port http://${hostname}:${port}`);
+  const logHostname = hostname === "0.0.0.0" ? "localhost" : hostname;
+  console.error(`Server running on port http://${logHostname}:${port}`);
 }
 
 export function createExports(manifest: SSRManifest, options: Options) {
