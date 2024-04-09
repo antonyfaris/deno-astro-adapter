@@ -74,11 +74,11 @@ const DENO_IMPORTS =
 export { serveFile } from 'https://deno.land/std@${DENO_VERSION}/http/file_server.ts';
 export { fromFileUrl } from "https://deno.land/std@${DENO_VERSION}/path/mod.ts";`;
 
-export function getAdapter(args?: Options): AstroAdapter {
+export function getAdapter(opts?: Options): AstroAdapter {
   return {
     name: "@astrojs/deno",
     serverEntrypoint: "@astrojs/deno/server.ts",
-    args: args ?? {},
+    args: opts ?? {},
     exports: ["stop", "handle", "start", "running"],
     supportedAstroFeatures: {
       hybridOutput: "stable",
@@ -105,19 +105,48 @@ const denoImportsShimPlugin = {
   },
 };
 
-const libsqlImportReplacePlugin = {
-  name: "libsql-import-replace",
-  setup(build: esbuild.PluginBuild) {
-    const filter = /^@libsql\/client/;
+const libsqlImportReplacePlugin: (isDenoDeploy: boolean) => esbuild.Plugin = (
+  isDenoDeploy,
+) => {
+  return {
+    name: "libsql-import-replace",
+    setup(build: esbuild.PluginBuild) {
+      const filter = /^@libsql\/client/;
 
-    // Replace libsql client import with the Deno compatible version
-    build.onResolve({ filter }, (args) => {
-      return {
-        path: "npm:@libsql/client/web",
-        external: true,
-      };
-    });
-  },
+      /**
+       * Read environment variable with compatibility for Deno and Node
+       */
+      function readEnvVar(varName: string) {
+        // Check if Deno is the environment
+        if (typeof Deno !== "undefined") {
+          return Deno.env.get(varName);
+        } // Check if Node.js is the environment
+        else if (typeof process !== "undefined") {
+          return process.env[varName];
+        } else {
+          throw new Error(
+            `Unsupported environment. Error trying to read environment variable: ${varName}.`,
+          );
+        }
+      }
+
+      // Replace libsql client import with the Deno compatible version
+      // https://github.com/tursodatabase/libsql-client-ts/issues/138
+      build.onResolve({ filter }, (args) => {
+        // check if is running in Deno Deploy
+        if (readEnvVar("DENO_DEPLOY") === "true" || isDenoDeploy) {
+          return {
+            path: "npm:@libsql/client/web",
+            external: true,
+          };
+        }
+        return {
+          path: "npm:@libsql/client/node",
+          external: true,
+        };
+      });
+    },
+  };
 };
 
 const replaceProcessCwdPlugin = {
@@ -150,14 +179,14 @@ const denoRenameNodeModulesPlugin = {
   },
 };
 
-export default function createIntegration(args?: Options): AstroIntegration {
+export default function createIntegration(opts?: Options): AstroIntegration {
   let _buildConfig: BuildConfig;
   let _vite: any;
   return {
     name: "@astrojs/deno",
     hooks: {
       "astro:config:done": ({ setAdapter, config }) => {
-        setAdapter(getAdapter(args));
+        setAdapter(getAdapter(opts));
         _buildConfig = config.build;
 
         if (config.output === "static") {
@@ -207,6 +236,8 @@ export default function createIntegration(args?: Options): AstroIntegration {
         const entryUrl = new URL(_buildConfig.serverEntry, _buildConfig.server);
         const pth = fileURLToPath(entryUrl);
 
+        const isDenoDeploy = opts?.isDenoDeploy ?? false;
+
         await esbuild.build({
           target: "esnext",
           platform: "browser",
@@ -223,7 +254,7 @@ export default function createIntegration(args?: Options): AstroIntegration {
             denoImportsShimPlugin,
             denoRenameNodeModulesPlugin,
             replaceProcessCwdPlugin,
-            libsqlImportReplacePlugin,
+            libsqlImportReplacePlugin(isDenoDeploy),
           ],
           banner: {
             js: SHIM,

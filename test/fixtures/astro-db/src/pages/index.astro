@@ -1,0 +1,21 @@
+---
+import Baselayout from "../layout/Baselayout.astro";
+
+import { db, Comment } from "astro:db";
+
+const comments = await db.select().from(Comment);
+---
+
+<Baselayout>
+  <h2>Comments</h2>
+
+  {
+    comments.map(({ author, body }, i) => (
+      <article id={`article-${i}`}>
+        <hr />
+        <p class="author">Author: {author}</p>
+        <p class="comment">{body}</p>
+      </article>
+    ))
+  }
+</Baselayout>

@@ -1,6 +1,6 @@
 /* Deno types consider DOM elements nullable */
 /* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
-import { DOMParser } from "https://deno.land/x/deno_dom@v0.1.35-alpha/deno-dom-wasm.ts";
+import { DOMParser } from "https://deno.land/x/deno_dom@v0.1.45/deno-dom-wasm.ts";
 import { assert } from "https://deno.land/std@0.221.0/assert/assert.ts";
 import {
   assertEquals,

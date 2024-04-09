@@ -10,6 +10,8 @@ export const defaultTestPermissions: Deno.PermissionOptions = {
   net: true,
   run: true,
   env: true,
+  ffi: true,
+  sys: true,
 };
 
 type ExitCallback = () => void;
@@ -32,7 +34,6 @@ function createCommand(
 }
 
 export async function runBuild(fixturePath: string) {
-  createCommand;
   const command = createCommand(["pnpm", "astro", "build", "--silent"], {
     cwd: fromFileUrl(new URL(fixturePath, dir)),
   });
@@ -56,7 +57,14 @@ export async function startModFromSubprocess(
 ): Promise<ExitCallback> {
   const entryUrl = new URL("./dist/server/entry.mjs", baseUrl);
   const proc = Deno.run({
-    cmd: ["deno", "run", "--allow-env", "--allow-net", fromFileUrl(entryUrl)],
+    cmd: [
+      "deno",
+      "run",
+      "--allow-env",
+      "--allow-net",
+      "--allow-ffi",
+      fromFileUrl(entryUrl),
+    ],
     cwd: fromFileUrl(baseUrl),
     stderr: "piped",
   });

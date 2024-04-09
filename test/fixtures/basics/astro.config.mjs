@@ -1,4 +1,4 @@
-import { defineConfig } from 'astro/config';
+import { defineConfig, passthroughImageService } from 'astro/config';
 import deno from '@astrojs/deno';
 import react from '@astrojs/react';
 import mdx from '@astrojs/mdx';
@@ -6,5 +6,8 @@ import mdx from '@astrojs/mdx';
 export default defineConfig({
 	adapter: deno(),
 	integrations: [react(), mdx()],
-	output: 'server'
+	output: 'server',
+	image: {
+    service: passthroughImageService(),
+  },
 })
