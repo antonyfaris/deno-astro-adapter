@@ -7,13 +7,6 @@ const Comment = defineTable({
   },
 });
 
-const Number = defineTable({
-  columns: {
-    id: column.number({ primaryKey: true }),
-    number: column.number(),
-  },
-});
-
 export default defineDb({
-  tables: { Comment, Number },
+  tables: { Comment },
 });
