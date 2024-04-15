@@ -105,6 +105,23 @@ const denoImportsShimPlugin = {
   },
 };
 
+/**
+ * Read environment variable with compatibility for Deno and Node
+ */
+function readEnvVar(varName: string) {
+  // Check if Deno is the environment
+  if (typeof Deno !== "undefined") {
+    return Deno.env.get(varName);
+  } // Check if Node.js is the environment
+  else if (typeof process !== "undefined") {
+    return process.env[varName];
+  } else {
+    throw new Error(
+      `Unsupported environment. Error trying to read environment variable: ${varName}.`,
+    );
+  }
+}
+
 const libsqlImportReplacePlugin: (isDenoDeploy: boolean) => esbuild.Plugin = (
   isDenoDeploy,
 ) => {
@@ -113,35 +130,17 @@ const libsqlImportReplacePlugin: (isDenoDeploy: boolean) => esbuild.Plugin = (
     setup(build: esbuild.PluginBuild) {
       const filter = /^@libsql\/client/;
 
-      /**
-       * Read environment variable with compatibility for Deno and Node
-       */
-      function readEnvVar(varName: string) {
-        // Check if Deno is the environment
-        if (typeof Deno !== "undefined") {
-          return Deno.env.get(varName);
-        } // Check if Node.js is the environment
-        else if (typeof process !== "undefined") {
-          return process.env[varName];
-        } else {
-          throw new Error(
-            `Unsupported environment. Error trying to read environment variable: ${varName}.`,
-          );
-        }
-      }
+      // Check if should use "web" version of libsql client
+      const isWebEnvironment = readEnvVar("DENO_DEPLOY") === "true" ||
+        isDenoDeploy;
 
       // Replace libsql client import with the Deno compatible version
       // https://github.com/tursodatabase/libsql-client-ts/issues/138
-      build.onResolve({ filter }, (args) => {
-        // check if is running in Deno Deploy
-        if (readEnvVar("DENO_DEPLOY") === "true" || isDenoDeploy) {
-          return {
-            path: "npm:@libsql/client/web",
-            external: true,
-          };
-        }
+      build.onResolve({ filter }, () => {
         return {
-          path: "npm:@libsql/client/node",
+          path: isWebEnvironment
+            ? "npm:@libsql/client/web"
+            : "npm:@libsql/client/node",
           external: true,
         };
       });
@@ -156,7 +155,10 @@ const replaceProcessCwdPlugin = {
       const contents = await fs.promises.readFile(args.path, "utf8");
 
       // Replace process.cwd() with Deno.cwd()
-      const newContents = contents.replace(/\bprocess\.cwd\(\)/g, "Deno.cwd()");
+      const newContents = contents.replace(
+        /\bprocess\.cwd\s*\(\s*\)/g,
+        "Deno.cwd()",
+      );
 
       return {
         contents: newContents,
