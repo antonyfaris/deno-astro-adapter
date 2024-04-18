@@ -1,6 +1,5 @@
 import { fromFileUrl } from "https://deno.land/std@0.110.0/path/mod.ts";
 import { assert } from "https://deno.land/std@0.221.0/assert/assert.ts";
-import { readableStreamFromReader } from "https://deno.land/std@0.142.0/streams/conversion.ts";
 
 const dir = new URL("./", import.meta.url);
 const defaultURL = new URL("http://localhost:8085/");
@@ -15,28 +14,18 @@ export const defaultTestPermissions: Deno.PermissionOptions = {
 };
 
 type ExitCallback = () => void;
-
-function createCommand(
-  args: string[],
-  options?: Deno.CommandOptions,
-): Deno.Command {
-  if (Deno.build.os === "windows") {
-    return new Deno.Command("cmd.exe", {
-      args: ["/c", ...args],
-      ...options,
-    });
-  } else {
-    return new Deno.Command("sh", {
-      args: ["-c", args.join(" ")],
-      ...options,
-    });
-  }
-}
+type ExitCallbackPromise = () => Promise<void>;
 
 export async function runBuild(fixturePath: string) {
-  const command = createCommand(["pnpm", "astro", "build", "--silent"], {
+  const astroExec = Deno.build.os === "windows" ? "astro.CMD" : "astro";
+  const command = new Deno.Command(`./node_modules/.bin/${astroExec}`, {
+    args: [
+      "build",
+      "--silent",
+    ],
     cwd: fromFileUrl(new URL(fixturePath, dir)),
   });
+
   const { success } = await command.output();
   assert(success, "Build failed");
 }
@@ -54,11 +43,11 @@ export async function startModFromImport(baseUrl: URL): Promise<ExitCallback> {
 
 export async function startModFromSubprocess(
   baseUrl: URL,
-): Promise<ExitCallback> {
+): Promise<ExitCallbackPromise> {
   const entryUrl = new URL("./dist/server/entry.mjs", baseUrl);
-  const proc = Deno.run({
-    cmd: [
-      "deno",
+
+  const command = new Deno.Command(Deno.execPath(), {
+    args: [
       "run",
       "--allow-env",
       "--allow-net",
@@ -69,16 +58,20 @@ export async function startModFromSubprocess(
     stderr: "piped",
   });
 
-  const stderr = readableStreamFromReader(proc.stderr);
+  const proc = command.spawn();
+
   const dec = new TextDecoder();
-  for await (const bytes of stderr) {
+  for await (const bytes of proc.stderr) {
     const msg = dec.decode(bytes);
     if (msg.includes(`Server running`)) {
       break;
     }
   }
 
-  return () => proc.close();
+  return async () => {
+    proc.kill();
+    await proc.status;
+  };
 }
 
 export async function runBuildAndStartApp(fixturePath: string) {

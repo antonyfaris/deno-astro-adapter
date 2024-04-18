@@ -45,6 +45,5 @@ jobs:
       - name: Check Format
         run: pnpm format:check
 
-      # TODO: Fix linting
-      # - name: Lint
-      #   run: pnpm lint
+      - name: Lint
+        run: pnpm lint
