@@ -3596,6 +3596,12 @@
     "https://deno.land/x/deno_dom@v0.1.45/src/parser.ts": "e06b2300d693e6ae7564e53dfa5c9a9e97fdb8c044c39c52c8b93b5d60860be3"
   },
   "workspace": {
+    "dependencies": [
+      "npm:@astrojs/db",
+      "npm:@astrojs/mdx",
+      "npm:@astrojs/react",
+      "npm:astro"
+    ],
     "packageJson": {
       "dependencies": [
         "npm:@types/node@^20.12.7",

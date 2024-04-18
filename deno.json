@@ -1,10 +1,19 @@
 {
   "fmt": {
-    "include": ["test/**/*.ts", "src/**/*.ts"],
+    "include": ["test/**/*.ts", "src/**/*.ts", "*.json"],
     "exclude": ["test/fixtures/**/*.ts"]
   },
   "lint": {
     "include": ["test/**/*.ts"],
     "exclude": ["test/fixtures/**/*.ts"]
+  },
+  "imports": {
+    "astro/config": "npm:astro/config",
+    "@astrojs/deno": "./src/index.ts",
+    "@astrojs/react": "npm:@astrojs/react",
+    "@astrojs/mdx": "npm:@astrojs/mdx",
+    "@astrojs/db": "npm:@astrojs/db",
+    "std/": "https://deno.land/std@0.221.0/",
+    "deno_dom/": "https://deno.land/x/deno_dom@v0.1.45/"
   }
 }

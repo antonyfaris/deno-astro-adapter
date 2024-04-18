@@ -1,5 +1,5 @@
-import { fromFileUrl } from "https://deno.land/std@0.110.0/path/mod.ts";
-import { assert } from "https://deno.land/std@0.221.0/assert/assert.ts";
+import { fromFileUrl } from "std/path/mod.ts";
+import { assert } from "std/assert/assert.ts";
 
 const dir = new URL("./", import.meta.url);
 const defaultURL = new URL("http://localhost:8085/");
