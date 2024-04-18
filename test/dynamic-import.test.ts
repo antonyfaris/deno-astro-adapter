@@ -24,6 +24,6 @@ Deno.test({
       assert(div, "div does not exist");
     });
 
-    app.stop();
+    await app.stop();
   },
 });
