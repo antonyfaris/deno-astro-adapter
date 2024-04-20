@@ -3,6 +3,7 @@ import esbuild from "esbuild";
 
 import { fileURLToPath } from "node:url";
 
+import { COMPATIBLE_NODE_MODULES } from "./consts.ts";
 import { readEnvVar } from "./utils.ts";
 
 import type { Options } from "./types.ts";
@@ -12,60 +13,6 @@ const SHIM = `globalThis.process = {
   env: Deno.env.toObject(),
   cwd: Deno.cwd,
 };`;
-
-// REF: https://github.com/denoland/deno/tree/main/ext/node/polyfills
-const COMPATIBLE_NODE_MODULES = [
-  "assert",
-  "assert/strict",
-  "async_hooks",
-  "buffer",
-  "child_process",
-  "cluster",
-  "console",
-  "constants",
-  "crypto",
-  "dgram",
-  "diagnostics_channel",
-  "dns",
-  "events",
-  "fs",
-  "fs/promises",
-  "http",
-  // 'http2',
-  "https",
-  "inspector",
-  "module",
-  "net",
-  "os",
-  "path",
-  "path/posix",
-  "path/win32",
-  "perf_hooks",
-  "process",
-  "punycode",
-  "querystring",
-  "readline",
-  "repl",
-  "stream",
-  "stream/promises",
-  "stream/web",
-  "string_decoder",
-  "sys",
-  "timers",
-  "timers/promises",
-  // 'tls',
-  "trace_events",
-  "tty",
-  "url",
-  "util",
-  "util/types",
-  // 'v8',
-  // 'vm',
-  // 'wasi',
-  // 'webcrypto',
-  "worker_threads",
-  "zlib",
-];
 
 export function getAdapter(opts?: Options): AstroAdapter {
   return {
