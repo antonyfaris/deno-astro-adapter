@@ -90,9 +90,6 @@ export function start(manifest: SSRManifest, options: Options) {
     { port, hostname },
     handler,
   );
-
-  const logHostname = hostname === "0.0.0.0" ? "localhost" : hostname;
-  console.error(`Server running on port http://${logHostname}:${port}`);
 }
 
 export function createExports(manifest: SSRManifest, options: Options) {

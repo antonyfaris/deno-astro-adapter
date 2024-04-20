@@ -55,15 +55,15 @@ export async function startModFromSubprocess(
       fromFileUrl(entryUrl),
     ],
     cwd: fromFileUrl(baseUrl),
-    stderr: "piped",
+    stdout: "piped",
   });
 
   const proc = command.spawn();
 
   const dec = new TextDecoder();
-  for await (const bytes of proc.stderr) {
+  for await (const bytes of proc.stdout) {
     const msg = dec.decode(bytes);
-    if (msg.includes(`Server running`)) {
+    if (msg.includes("Listening on")) {
       break;
     }
   }
