@@ -2,19 +2,18 @@ import type { AstroAdapter, AstroConfig, AstroIntegration } from "astro";
 import esbuild from "esbuild";
 
 import { fileURLToPath } from "node:url";
-// import * as npath from "node:path";
 
 import { readEnvVar } from "./utils.ts";
 
 import type { Options } from "./types.ts";
 
 const SHIM = `globalThis.process = {
-	argv: [],
-	env: Deno.env.toObject(),
+  argv: [],
+  env: Deno.env.toObject(),
   cwd: Deno.cwd,
 };`;
 
-const DENO_VERSION = `0.222.1`;
+const DENO_STD_VERSION = "0.222.1";
 // REF: https://github.com/denoland/deno/tree/main/ext/node/polyfills
 const COMPATIBLE_NODE_MODULES = [
   "assert",
@@ -73,10 +72,11 @@ const COMPATIBLE_NODE_MODULES = [
 // to prerender pages. In the final Deno build, this import is
 // replaced with the Deno-specific contents listed below.
 const DENO_IMPORTS_SHIM = `@astrojs/deno/__deno_imports.ts`;
-const DENO_IMPORTS =
-  `export { Server } from "https://deno.land/std@${DENO_VERSION}/http/server.ts"
-export { serveFile } from 'https://deno.land/std@${DENO_VERSION}/http/file_server.ts';
-export { fromFileUrl } from "https://deno.land/std@${DENO_VERSION}/path/mod.ts";`;
+const DENO_IMPORTS = `
+  export { Server } from "https://deno.land/std@${DENO_STD_VERSION}/http/server.ts"
+  export { serveFile } from 'https://deno.land/std@${DENO_STD_VERSION}/http/file_server.ts';
+  export { fromFileUrl } from "https://deno.land/std@${DENO_STD_VERSION}/path/mod.ts";
+`;
 
 export function getAdapter(opts?: Options): AstroAdapter {
   return {
@@ -149,10 +149,6 @@ const denoRenameNodeModulesPlugin = {
 };
 
 export default function createIntegration(opts?: Options): AstroIntegration {
-  // type HookContextType = AstroIntegration["hooks"]["astro:build:setup"];
-  // type InlineConfig = Parameters<NonNullable<HookContextType>>[0]["vite"];
-
-  // let _vite: InlineConfig;
   let _buildConfig: AstroConfig["build"];
   return {
     name: "@astrojs/deno",
@@ -234,19 +230,6 @@ export default function createIntegration(opts?: Options): AstroIntegration {
             "ignored-bare-import": "silent",
           },
         });
-
-        // TODO: Do we need to remove chunks?
-        // Remove chunks, if they exist. Since we have bundled via esbuild these chunks are trash.
-        // try {
-        //   const chunkFileNames =
-        //     _vite?.build?.rollupOptions?.output?.chunkFileNames ??
-        //       `chunks/chunk.[hash].mjs`;
-        //   const chunkPath = npath.dirname(chunkFileNames);
-        //   const chunksDirUrl = new URL(chunkPath + "/", _buildConfig.server);
-        //   await fs.promises.rm(chunksDirUrl, { recursive: true, force: true });
-        // } catch (e) {
-        //   console.warn("Failed to remove chunks directory", e);
-        // }
       },
     },
   };
