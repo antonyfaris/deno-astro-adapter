@@ -13,7 +13,6 @@ const SHIM = `globalThis.process = {
   cwd: Deno.cwd,
 };`;
 
-const DENO_STD_VERSION = "0.222.1";
 // REF: https://github.com/denoland/deno/tree/main/ext/node/polyfills
 const COMPATIBLE_NODE_MODULES = [
   "assert",
@@ -68,16 +67,6 @@ const COMPATIBLE_NODE_MODULES = [
   "zlib",
 ];
 
-// We shim deno-specific imports so we can run the code in Node
-// to prerender pages. In the final Deno build, this import is
-// replaced with the Deno-specific contents listed below.
-const DENO_IMPORTS_SHIM = `@astrojs/deno/__deno_imports.ts`;
-const DENO_IMPORTS = `
-  export { Server } from "https://deno.land/std@${DENO_STD_VERSION}/http/server.ts"
-  export { serveFile } from 'https://deno.land/std@${DENO_STD_VERSION}/http/file_server.ts';
-  export { fromFileUrl } from "https://deno.land/std@${DENO_STD_VERSION}/path/mod.ts";
-`;
-
 export function getAdapter(opts?: Options): AstroAdapter {
   return {
     name: "@astrojs/deno",
@@ -96,18 +85,6 @@ export function getAdapter(opts?: Options): AstroAdapter {
     },
   };
 }
-
-const denoImportsShimPlugin = {
-  name: "@astrojs/deno:shim",
-  setup(build: esbuild.PluginBuild) {
-    build.onLoad({ filter: /__deno_imports\.ts$/ }, () => {
-      return {
-        contents: DENO_IMPORTS,
-        loader: "ts",
-      };
-    });
-  },
-};
 
 const libsqlImportReplacePlugin: (isDenoDeploy: boolean) => esbuild.Plugin = (
   isDenoDeploy,
@@ -168,7 +145,6 @@ export default function createIntegration(opts?: Options): AstroIntegration {
       },
       "astro:build:setup": ({ vite, target }) => {
         if (target === "server") {
-          // _vite = vite;
           vite.resolve = vite.resolve ?? {};
           vite.resolve.alias = vite.resolve.alias ?? {};
           vite.build = vite.build ?? {};
@@ -188,15 +164,6 @@ export default function createIntegration(opts?: Options): AstroIntegration {
               (vite.resolve.alias as Record<string, string>)[alias.find] =
                 alias.replacement;
             }
-          }
-
-          if (Array.isArray(vite.build.rollupOptions.external)) {
-            vite.build.rollupOptions.external.push(DENO_IMPORTS_SHIM);
-          } else if (typeof vite.build.rollupOptions.external !== "function") {
-            vite.build.rollupOptions.external = [
-              vite.build.rollupOptions.external,
-              DENO_IMPORTS_SHIM,
-            ];
           }
         }
       },
@@ -219,7 +186,6 @@ export default function createIntegration(opts?: Options): AstroIntegration {
             "@astrojs/markdown-remark",
           ],
           plugins: [
-            denoImportsShimPlugin,
             denoRenameNodeModulesPlugin,
             libsqlImportReplacePlugin(isDenoDeploy),
           ],

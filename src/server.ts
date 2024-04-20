@@ -1,13 +1,12 @@
 // Normal Imports
-import type { SSRManifest } from "astro";
 import { App } from "astro/app";
+
+import { fromFileUrl, serveFile } from "./__deno_imports.ts";
+
+import type { SSRManifest } from "astro";
 import type { Options } from "./types.ts";
 
-import { fromFileUrl, serveFile, Server } from "./__deno_imports.ts";
-import type { Handler } from "./__deno_imports.ts";
-
-let _server: Server | undefined = undefined;
-let _startPromise: Promise<void> | undefined = undefined;
+let _server: Deno.HttpServer | undefined;
 
 async function* getPrerenderedFiles(clientRoot: URL): AsyncGenerator<URL> {
   for await (const ent of Deno.readDir(clientRoot)) {
@@ -30,12 +29,10 @@ export function start(manifest: SSRManifest, options: Options) {
 
   const clientRoot = new URL("../client/", import.meta.url);
   const app = new App(manifest);
-  const handler: Handler = async (request, connInfo) => {
+  const handler: Deno.ServeHandler = async (request, connInfo) => {
     if (app.match(request)) {
-      if ("hostname" in connInfo?.remoteAddr) {
-        const ip = connInfo?.remoteAddr?.hostname;
-        Reflect.set(request, Symbol.for("astro.clientAddress"), ip);
-      }
+      const ip = connInfo.remoteAddr.hostname;
+      Reflect.set(request, Symbol.for("astro.clientAddress"), ip);
 
       const response = await app.render(request);
       if (app.setCookieHeaders) {
@@ -89,13 +86,11 @@ export function start(manifest: SSRManifest, options: Options) {
   const hostname = options.hostname ?? "0.0.0.0";
 
   const port = options.port ?? 8085;
-  _server = new Server({
-    port,
-    hostname,
+  _server = Deno.serve(
+    { port, hostname },
     handler,
-  });
+  );
 
-  _startPromise = Promise.resolve(_server.listenAndServe());
   const logHostname = hostname === "0.0.0.0" ? "localhost" : hostname;
   console.error(`Server running on port http://${logHostname}:${port}`);
 }
@@ -103,12 +98,11 @@ export function start(manifest: SSRManifest, options: Options) {
 export function createExports(manifest: SSRManifest, options: Options) {
   const app = new App(manifest);
   return {
-    async stop() {
+    stop() {
       if (_server) {
-        _server.close();
+        _server.shutdown();
         _server = undefined;
       }
-      await Promise.resolve(_startPromise);
     },
     running() {
       return _server !== undefined;
