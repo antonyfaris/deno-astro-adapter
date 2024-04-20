@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
-    "@astrojs/db": "^0.10.2",
+    "@astrojs/db": "^0.10.5",
     "@astrojs/deno": "workspace:*",
-    "astro": "^4.5.17"
+    "astro": "^4.6.3"
   }
 }

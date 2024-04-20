@@ -38,7 +38,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.12.7",
-    "astro": "^4.5.17",
-    "typescript": "^5.4.4"
+    "astro": "^4.6.3",
+    "typescript": "^5.4.5"
   }
 }
