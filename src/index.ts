@@ -1,7 +1,6 @@
 import type { AstroAdapter, AstroConfig, AstroIntegration } from "astro";
 import esbuild from "esbuild";
 
-import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 // import * as npath from "node:path";
 
@@ -12,6 +11,7 @@ import type { Options } from "./types.ts";
 const SHIM = `globalThis.process = {
 	argv: [],
 	env: Deno.env.toObject(),
+  cwd: Deno.cwd,
 };`;
 
 const DENO_VERSION = `0.222.1`;
@@ -135,26 +135,6 @@ const libsqlImportReplacePlugin: (isDenoDeploy: boolean) => esbuild.Plugin = (
   };
 };
 
-const replaceProcessCwdPlugin = {
-  name: "replace-process-cwd",
-  setup(build: esbuild.PluginBuild) {
-    build.onLoad({ filter: /\.(ts|js)$/ }, async (args) => {
-      const contents = await readFile(args.path, "utf8");
-
-      // Replace process.cwd() with Deno.cwd()
-      const newContents = contents.replace(
-        /\bprocess\.cwd\s*\(\s*\)/g,
-        "Deno.cwd()",
-      );
-
-      return {
-        contents: newContents,
-        loader: args.path.endsWith(".ts") ? "ts" : "js",
-      };
-    });
-  },
-};
-
 const denoRenameNodeModulesPlugin = {
   name: "@astrojs/esbuild-rename-node-modules",
   setup(build: esbuild.PluginBuild) {
@@ -245,7 +225,6 @@ export default function createIntegration(opts?: Options): AstroIntegration {
           plugins: [
             denoImportsShimPlugin,
             denoRenameNodeModulesPlugin,
-            replaceProcessCwdPlugin,
             libsqlImportReplacePlugin(isDenoDeploy),
           ],
           banner: {
