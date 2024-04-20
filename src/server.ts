@@ -3,18 +3,13 @@ import type { SSRManifest } from "astro";
 import { App } from "astro/app";
 import type { Options } from "./types.ts";
 
-// @ts-expect-error
-import {
-  fromFileUrl,
-  serveFile,
-  Server,
-} from "@astrojs/deno/__deno_imports.ts";
+import { fromFileUrl, serveFile, Server } from "./__deno_imports.ts";
+import type { Handler } from "./__deno_imports.ts";
 
 let _server: Server | undefined = undefined;
 let _startPromise: Promise<void> | undefined = undefined;
 
 async function* getPrerenderedFiles(clientRoot: URL): AsyncGenerator<URL> {
-  // @ts-expect-error
   for await (const ent of Deno.readDir(clientRoot)) {
     if (ent.isDirectory) {
       yield* getPrerenderedFiles(new URL(`./${ent.name}/`, clientRoot));
@@ -35,10 +30,13 @@ export function start(manifest: SSRManifest, options: Options) {
 
   const clientRoot = new URL("../client/", import.meta.url);
   const app = new App(manifest);
-  const handler = async (request: Request, connInfo: any) => {
+  const handler: Handler = async (request, connInfo) => {
     if (app.match(request)) {
-      let ip = connInfo?.remoteAddr?.hostname;
-      Reflect.set(request, Symbol.for("astro.clientAddress"), ip);
+      if ("hostname" in connInfo?.remoteAddr) {
+        const ip = connInfo?.remoteAddr?.hostname;
+        Reflect.set(request, Symbol.for("astro.clientAddress"), ip);
+      }
+
       const response = await app.render(request);
       if (app.setCookieHeaders) {
         for (const setCookieHeader of app.setCookieHeaders(response)) {
@@ -115,10 +113,10 @@ export function createExports(manifest: SSRManifest, options: Options) {
     running() {
       return _server !== undefined;
     },
-    async start() {
+    start() {
       return start(manifest, options);
     },
-    async handle(request: Request) {
+    handle(request: Request) {
       return app.render(request);
     },
   };

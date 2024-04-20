@@ -28,13 +28,14 @@
     "test": "deno test --allow-run --allow-env --allow-read --allow-net --allow-ffi --allow-sys ./test/",
     "format": "deno fmt",
     "format:check": "deno fmt --check",
-    "lint": "deno lint"
+    "lint": "deno lint",
+    "check": "deno check ./src/index.ts"
   },
   "dependencies": {
     "esbuild": "^0.20.2"
   },
   "peerDependencies": {
-    "astro": "^4.2.1"
+    "astro": "^4.6.3"
   },
   "devDependencies": {
     "@types/node": "^20.12.7",

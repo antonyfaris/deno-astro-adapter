@@ -4,7 +4,7 @@
     "exclude": ["test/fixtures/**/*.ts"]
   },
   "lint": {
-    "include": ["test/**/*.ts"],
+    "include": ["test/**/*.ts", "src/**/*.ts"],
     "exclude": ["test/fixtures/**/*.ts"]
   },
   "imports": {

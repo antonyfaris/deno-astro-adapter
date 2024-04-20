@@ -4,9 +4,3 @@ export interface Options {
   start?: boolean;
   isDenoDeploy?: boolean;
 }
-
-export interface BuildConfig {
-  server: URL;
-  serverEntry: string;
-  assets: string;
-}

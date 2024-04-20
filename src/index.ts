@@ -1,9 +1,13 @@
-import type { AstroAdapter, AstroIntegration } from "astro";
+import type { AstroAdapter, AstroConfig, AstroIntegration } from "astro";
 import esbuild from "esbuild";
-import * as fs from "node:fs";
-import * as npath from "node:path";
+
+import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
-import type { BuildConfig, Options } from "./types.ts";
+// import * as npath from "node:path";
+
+import { readEnvVar } from "./utils.ts";
+
+import type { Options } from "./types.ts";
 
 const SHIM = `globalThis.process = {
 	argv: [],
@@ -96,7 +100,7 @@ export function getAdapter(opts?: Options): AstroAdapter {
 const denoImportsShimPlugin = {
   name: "@astrojs/deno:shim",
   setup(build: esbuild.PluginBuild) {
-    build.onLoad({ filter: /__deno_imports\.ts$/ }, async () => {
+    build.onLoad({ filter: /__deno_imports\.ts$/ }, () => {
       return {
         contents: DENO_IMPORTS,
         loader: "ts",
@@ -104,23 +108,6 @@ const denoImportsShimPlugin = {
     });
   },
 };
-
-/**
- * Read environment variable with compatibility for Deno and Node
- */
-function readEnvVar(varName: string) {
-  // Check if Deno is the environment
-  if (typeof Deno !== "undefined") {
-    return Deno.env.get(varName);
-  } // Check if Node.js is the environment
-  else if (typeof process !== "undefined") {
-    return process.env[varName];
-  } else {
-    throw new Error(
-      `Unsupported environment. Error trying to read environment variable: ${varName}.`,
-    );
-  }
-}
 
 const libsqlImportReplacePlugin: (isDenoDeploy: boolean) => esbuild.Plugin = (
   isDenoDeploy,
@@ -152,7 +139,7 @@ const replaceProcessCwdPlugin = {
   name: "replace-process-cwd",
   setup(build: esbuild.PluginBuild) {
     build.onLoad({ filter: /\.(ts|js)$/ }, async (args) => {
-      const contents = await fs.promises.readFile(args.path, "utf8");
+      const contents = await readFile(args.path, "utf8");
 
       // Replace process.cwd() with Deno.cwd()
       const newContents = contents.replace(
@@ -182,8 +169,11 @@ const denoRenameNodeModulesPlugin = {
 };
 
 export default function createIntegration(opts?: Options): AstroIntegration {
-  let _buildConfig: BuildConfig;
-  let _vite: any;
+  // type HookContextType = AstroIntegration["hooks"]["astro:build:setup"];
+  // type InlineConfig = Parameters<NonNullable<HookContextType>>[0]["vite"];
+
+  // let _vite: InlineConfig;
+  let _buildConfig: AstroConfig["build"];
   return {
     name: "@astrojs/deno",
     hooks: {
@@ -202,7 +192,7 @@ export default function createIntegration(opts?: Options): AstroIntegration {
       },
       "astro:build:setup": ({ vite, target }) => {
         if (target === "server") {
-          _vite = vite;
+          // _vite = vite;
           vite.resolve = vite.resolve ?? {};
           vite.resolve.alias = vite.resolve.alias ?? {};
           vite.build = vite.build ?? {};
@@ -266,15 +256,18 @@ export default function createIntegration(opts?: Options): AstroIntegration {
           },
         });
 
+        // TODO: Do we need to remove chunks?
         // Remove chunks, if they exist. Since we have bundled via esbuild these chunks are trash.
-        try {
-          const chunkFileNames =
-            _vite?.build?.rollupOptions?.output?.chunkFileNames ??
-              `chunks/chunk.[hash].mjs`;
-          const chunkPath = npath.dirname(chunkFileNames);
-          const chunksDirUrl = new URL(chunkPath + "/", _buildConfig.server);
-          await fs.promises.rm(chunksDirUrl, { recursive: true, force: true });
-        } catch {}
+        // try {
+        //   const chunkFileNames =
+        //     _vite?.build?.rollupOptions?.output?.chunkFileNames ??
+        //       `chunks/chunk.[hash].mjs`;
+        //   const chunkPath = npath.dirname(chunkFileNames);
+        //   const chunksDirUrl = new URL(chunkPath + "/", _buildConfig.server);
+        //   await fs.promises.rm(chunksDirUrl, { recursive: true, force: true });
+        // } catch (e) {
+        //   console.warn("Failed to remove chunks directory", e);
+        // }
       },
     },
   };

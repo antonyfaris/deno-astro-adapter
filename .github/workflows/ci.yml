@@ -47,3 +47,6 @@ jobs:
 
       - name: Lint
         run: pnpm lint
+
+      - name: Deno check
+        run: pnpm check
