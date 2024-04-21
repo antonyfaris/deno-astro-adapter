@@ -1,10 +1,10 @@
-import type { AstroAdapter, AstroConfig, AstroIntegration } from "astro";
-import esbuild from "esbuild";
-
 import { fileURLToPath } from "node:url";
+
+import esbuild from "esbuild";
 
 import { COMPATIBLE_NODE_MODULES } from "./consts.ts";
 
+import type { AstroAdapter, AstroConfig, AstroIntegration } from "astro";
 import type { Options } from "./types.ts";
 
 const SHIM = `globalThis.process = {
