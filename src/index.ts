@@ -4,7 +4,6 @@ import esbuild from "esbuild";
 import { fileURLToPath } from "node:url";
 
 import { COMPATIBLE_NODE_MODULES } from "./consts.ts";
-import { readEnvVar } from "./utils.ts";
 
 import type { Options } from "./types.ts";
 
@@ -41,8 +40,8 @@ const libsqlImportReplacePlugin: (isDenoDeploy: boolean) => esbuild.Plugin = (
     setup(build: esbuild.PluginBuild) {
       const filter = /^@libsql\/client/;
 
-      // Check if should use "web" version of libsql client
-      const isWebEnvironment = readEnvVar("DENO_DEPLOY") === "true" ||
+      // Check if the "web" version of the libsql client should be used.
+      const isWebEnvironment = process.env["DENO_DEPLOY"] === "true" ||
         isDenoDeploy;
 
       // Replace libsql client import with the Deno compatible version
