@@ -1,4 +1,5 @@
 declare global {
+  // @ts-ignore - To avoid warnings about redeclaring block-scoped variable
   const process: {
     env: {
       [key: string]: string | undefined;
