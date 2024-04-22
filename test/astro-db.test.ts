@@ -1,8 +1,7 @@
 import { DOMParser } from "deno_dom/deno-dom-wasm.ts";
 import { assert } from "std/assert/assert.ts";
 import { assertEquals } from "std/assert/assert_equals.ts";
-import { defaultTestPermissions } from "./helpers.ts";
-import { runBuildAndStartApp } from "./helpers.ts";
+import { defaultTestPermissions, runBuildAndStartApp } from "./helpers.ts";
 
 // this needs to be here and not in the specific test case, because
 // the variables are loaded in the global scope of the built server

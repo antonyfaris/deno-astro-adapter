@@ -1,0 +1,16 @@
+---
+import { Image } from "astro:assets";
+
+import Baselayout from "../layout/Baselayout.astro";
+
+import denoImg from "../assets/cover.png";
+---
+
+<Baselayout title="images">
+  <h1>Images</h1>
+  <div>
+    <Image src={denoImg} alt="test" width="200" height="105" id="img-1" />
+    <hr />
+    <img src="/cover.png" alt="test" id="img-2" />
+  </div>
+</Baselayout>

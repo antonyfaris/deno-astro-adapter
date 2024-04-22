@@ -25,7 +25,7 @@ export function getAdapter(opts?: Options): AstroAdapter {
       serverOutput: "stable",
       assets: {
         supportKind: "stable",
-        isSharpCompatible: false,
+        isSharpCompatible: true,
         isSquooshCompatible: false,
       },
     },
@@ -130,6 +130,7 @@ export default function createIntegration(opts?: Options): AstroIntegration {
           external: [
             ...COMPATIBLE_NODE_MODULES.map((mod) => `node:${mod}`),
             "@astrojs/markdown-remark",
+            "sharp",
           ],
           plugins: [
             denoRenameNodeModulesPlugin,
