@@ -1,4 +1,5 @@
 {
+  "tasks": { "check": "deno check ./src/**/*.ts && deno check ./test/*.ts" },
   "fmt": {
     "include": ["test/**/*.ts", "src/**/*.ts", "*.json"],
     "exclude": ["test/fixtures/**/*.ts"]
