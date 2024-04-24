@@ -1,0 +1,9 @@
+{
+  "name": "@test/deno-astro-images",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "@astrojs/deno": "workspace:*",
+    "astro": "^4.6.3"
+  }
+}

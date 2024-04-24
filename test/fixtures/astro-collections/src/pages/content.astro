@@ -1,0 +1,12 @@
+---
+import { getEntry } from "astro:content";
+
+import Baselayout from "../layout/Baselayout.astro";
+
+const sample = await getEntry("blog", "sample1");
+const { Content } = await sample.render();
+---
+
+<Baselayout title="images">
+  <Content />
+</Baselayout>

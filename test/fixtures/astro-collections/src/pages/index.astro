@@ -1,0 +1,24 @@
+---
+import { getCollection } from "astro:content";
+
+import Baselayout from "../layout/Baselayout.astro";
+
+const allBlogPosts = await getCollection("blog");
+---
+
+<Baselayout title="images">
+  <h1>Content Collections</h1>
+  <div>
+    {
+      allBlogPosts.map((post) => (
+        <>
+          <hr />
+          <div>
+            <h2>{post.data.title}</h2>
+            <p>{post.data.description}</p>
+          </div>
+        </>
+      ))
+    }
+  </div>
+</Baselayout>
