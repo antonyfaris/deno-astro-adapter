@@ -3,6 +3,7 @@ import { fileURLToPath } from "node:url";
 import esbuild from "esbuild";
 
 import { COMPATIBLE_NODE_MODULES } from "./consts.ts";
+import { readEnvVar } from "./utils.ts";
 
 import type { AstroAdapter, AstroConfig, AstroIntegration } from "astro";
 import type { Options } from "./types.ts";
@@ -41,7 +42,7 @@ const libsqlImportReplacePlugin: (isDenoDeploy: boolean) => esbuild.Plugin = (
       const filter = /^@libsql\/client/;
 
       // Check if the "web" version of the libsql client should be used.
-      const isWebEnvironment = process.env["DENO_DEPLOY"] === "true" ||
+      const isWebEnvironment = readEnvVar("DENO_DEPLOY") === "true" ||
         isDenoDeploy;
 
       // Replace libsql client import with the Deno compatible version

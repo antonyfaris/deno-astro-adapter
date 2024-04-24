@@ -4,6 +4,7 @@
     "specifiers": {
       "npm:@astrojs/db@^0.10.2": "npm:@astrojs/db@0.10.3_@libsql+client@0.5.6",
       "npm:@libsql/client": "npm:@libsql/client@0.6.0",
+      "npm:@libsql/client-wasm": "npm:@libsql/client-wasm@0.6.0",
       "npm:@types/node": "npm:@types/node@18.16.19",
       "npm:@types/node@^20.12.7": "npm:@types/node@20.12.7",
       "npm:astro": "npm:astro@4.6.3_@babel+core@7.24.4_typescript@5.4.5_@types+node@20.12.7_vite@5.2.9__@types+node@20.12.7_zod@3.22.4",
@@ -586,6 +587,14 @@
           "@jridgewell/sourcemap-codec": "@jridgewell/sourcemap-codec@1.4.15"
         }
       },
+      "@libsql/client-wasm@0.6.0": {
+        "integrity": "sha512-X7+97PJgEojw67CtM9K2KePbJwPdhSKOXgtum+FDfTEX80tgk//GNHou7notX9SLHWUtjp19J51/nLtGzX4jUg==",
+        "dependencies": {
+          "@libsql/core": "@libsql/core@0.6.0",
+          "@libsql/libsql-wasm-experimental": "@libsql/libsql-wasm-experimental@0.0.2",
+          "js-base64": "js-base64@3.7.7"
+        }
+      },
       "@libsql/client@0.5.6": {
         "integrity": "sha512-UBjmDoxz75Z2sHdP+ETCROpeLA/77VMesiff8R4UWK1rnaWbh6/YoCLDILMJL3Rh0udQeKxjL8MjXthqohax+g==",
         "dependencies": {
@@ -659,6 +668,10 @@
           "@types/ws": "@types/ws@8.5.10",
           "ws": "ws@8.16.0"
         }
+      },
+      "@libsql/libsql-wasm-experimental@0.0.2": {
+        "integrity": "sha512-xkiu88QwozGr3KEt9h0zeHLYUIWkeDchXmuOUW4/Wh/mRZkDlNtIIePAR0FiLl1j0o4OyTEOtPnvmaXQ5MNTKQ==",
+        "dependencies": {}
       },
       "@libsql/linux-arm64-gnu@0.3.10": {
         "integrity": "sha512-2uXpi9d8qtyIOr7pyG4a88j6YXgemyIHEs2Wbp+PPletlCIPsFS+E7IQHbz8VwTohchOzcokGUm1Bc5QC+A7wg==",
