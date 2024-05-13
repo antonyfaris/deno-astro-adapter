@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@astrojs/db": "^0.11.1",
-    "@astrojs/deno": "workspace:*",
+    "@antonyfaris/deno-astro-adapter": "workspace:*",
     "astro": "^4.8.3"
   }
 }

@@ -16,8 +16,8 @@ const SHIM = `globalThis.process = {
 
 export function getAdapter(opts?: Options): AstroAdapter {
   return {
-    name: "@astrojs/deno",
-    serverEntrypoint: "@astrojs/deno/server.ts",
+    name: "@antonyfaris/deno-astro-adapter",
+    serverEntrypoint: "@antonyfaris/deno-astro-adapter/server.ts",
     args: opts ?? {},
     exports: ["stop", "handle", "start", "running"],
     supportedAstroFeatures: {
@@ -75,7 +75,7 @@ const denoRenameNodeModulesPlugin = {
 export default function createIntegration(opts?: Options): AstroIntegration {
   let _buildConfig: AstroConfig["build"];
   return {
-    name: "@astrojs/deno",
+    name: "@antonyfaris/deno-astro-adapter",
     hooks: {
       "astro:config:done": ({ setAdapter, config }) => {
         setAdapter(getAdapter(opts));

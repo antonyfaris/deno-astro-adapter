@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
-    "@astrojs/deno": "workspace:*",
+    "@antonyfaris/deno-astro-adapter": "workspace:*",
     "astro": "^4.8.3"
   }
 }

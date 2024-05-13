@@ -1,20 +1,24 @@
 {
-  "name": "@astrojs/deno",
+  "name": "@antonyfaris/deno-astro-adapter",
   "description": "Deploy your Astro site to a Deno server",
-  "version": "5.0.1",
+  "version": "1.0.0",
   "type": "module",
-  "author": "denoland",
+  "author": {
+    "name": "Antony Faris"
+  },
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/denoland/deno-astro-adapter.git"
+    "url": "https://github.com/antonyfaris/deno-astro-adapter.git"
   },
   "keywords": [
     "withastro",
     "astro-adapter"
   ],
-  "bugs": "https://github.com/denoland/deno-astro-adapter/issues",
-  "homepage": "https://github.com/denoland/deno-astro-adapter/",
+  "bugs": {
+    "url": "https://github.com/antonyfaris/deno-astro-adapter/issues"
+  },
+  "homepage": "https://github.com/antonyfaris/deno-astro-adapter/",
   "exports": {
     ".": "./src/index.ts",
     "./server.ts": "./src/server.ts",

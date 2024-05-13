@@ -10,7 +10,7 @@
   },
   "imports": {
     "astro/config": "npm:astro/config",
-    "@astrojs/deno": "./src/index.ts",
+    "@antonyfaris/deno-astro-adapter": "./src/index.ts",
     "@astrojs/react": "npm:@astrojs/react",
     "@astrojs/mdx": "npm:@astrojs/mdx",
     "@astrojs/db": "npm:@astrojs/db",
