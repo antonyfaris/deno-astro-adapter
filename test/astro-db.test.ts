@@ -3,12 +3,7 @@ import { assert } from "std/assert/assert.ts";
 import { assertEquals } from "std/assert/assert_equals.ts";
 import { defaultTestPermissions, runBuildAndStartApp } from "./helpers.ts";
 
-// this needs to be here and not in the specific test case, because
-// the variables are loaded in the global scope of the built server
-// module, which is only executed once upon the first load
-const varContent = "this is a value stored in env variable";
-Deno.env.set("SOME_VARIABLE", varContent);
-
+// Absolute path to the sqlite database file
 const astroDatabasePath =
   new URL("./astro.db", `file://${Deno.cwd()}/`).pathname;
 Deno.env.set("ASTRO_DATABASE_FILE", astroDatabasePath);
