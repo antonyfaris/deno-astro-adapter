@@ -1,3 +1,5 @@
+> Note: Originally forked from [denoland/deno-astro-adapter](https://github.com/denoland/deno-astro-adapter) the README has not been updated to reflect the changes made to the adapter.
+
 # @astrojs/deno 🦖
 
 This adapter allows Astro to deploy your SSR site to Deno targets.
