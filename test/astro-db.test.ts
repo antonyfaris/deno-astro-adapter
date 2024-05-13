@@ -8,7 +8,10 @@ import { defaultTestPermissions, runBuildAndStartApp } from "./helpers.ts";
 // module, which is only executed once upon the first load
 const varContent = "this is a value stored in env variable";
 Deno.env.set("SOME_VARIABLE", varContent);
-Deno.env.set("ASTRO_DATABASE_FILE", "./astro");
+
+const astroDatabasePath =
+  new URL("./astro.db", `file://${Deno.cwd()}/`).pathname;
+Deno.env.set("ASTRO_DATABASE_FILE", astroDatabasePath);
 
 Deno.test({
   name: "Astro DB",

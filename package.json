@@ -32,7 +32,7 @@
     "check": "deno task check"
   },
   "dependencies": {
-    "esbuild": "^0.20.2",
+    "esbuild": "^0.21.2",
     "sharp": "^0.33.3"
   },
   "peerDependencies": {
@@ -40,8 +40,8 @@
     "sharp": "^0.33.3"
   },
   "devDependencies": {
-    "@types/node": "^20.12.7",
-    "astro": "^4.6.3",
+    "@types/node": "^20.12.11",
+    "astro": "^4.8.3",
     "typescript": "^5.4.5"
   }
 }

@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@astrojs/deno": "workspace:*",
-    "astro": "^4.6.3",
+    "astro": "^4.8.3",
     "sharp": "^0.33.3"
   }
 }
