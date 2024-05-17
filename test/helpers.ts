@@ -1,5 +1,5 @@
-import { fromFileUrl } from "std/path/mod.ts";
-import { assert } from "std/assert/assert.ts";
+import { fromFileUrl } from "@std/path";
+import { assert } from "@std/assert";
 
 const dir = new URL("./", import.meta.url);
 const defaultURL = new URL("http://localhost:8085/");

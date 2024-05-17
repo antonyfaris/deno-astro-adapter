@@ -72,14 +72,15 @@ const denoRenameNodeModulesPlugin = {
   },
 };
 
+type AstroBuildConfig = AstroConfig["build"] & { server: URL, client: URL };
 export default function createIntegration(opts?: Options): AstroIntegration {
-  let _buildConfig: AstroConfig["build"];
+  let _buildConfig: AstroBuildConfig;
   return {
     name: "@antonyfaris/deno-astro-adapter",
     hooks: {
       "astro:config:done": ({ setAdapter, config }) => {
         setAdapter(getAdapter(opts));
-        _buildConfig = config.build;
+        _buildConfig = config.build as AstroBuildConfig;
 
         if (config.output === "static") {
           console.warn(
