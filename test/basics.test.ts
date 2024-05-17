@@ -1,6 +1,6 @@
 import { DOMParser } from "deno_dom/deno-dom-wasm.ts";
-import { assert } from "std/assert/assert.ts";
-import { assertEquals } from "std/assert/assert_equals.ts";
+import { assert } from "@std/assert";
+import { assertEquals } from "@std/assert";
 import { defaultTestPermissions, runBuildAndStartApp } from "./helpers.ts";
 
 // this needs to be here and not in the specific test case, because
