@@ -36,16 +36,16 @@
     "check": "deno task check"
   },
   "dependencies": {
-    "esbuild": "^0.21.2",
-    "sharp": "^0.33.3"
+    "esbuild": "^0.23.0",
+    "sharp": "^0.33.4"
   },
   "peerDependencies": {
-    "astro": "^4.6.3",
-    "sharp": "^0.33.3"
+    "astro": "^4.13.1",
+    "sharp": "^0.33.4"
   },
   "devDependencies": {
-    "@types/node": "^20.12.11",
-    "astro": "^4.8.3",
-    "typescript": "^5.4.5"
+    "@types/node": "^22.1.0",
+    "astro": "^4.13.1",
+    "typescript": "^5.5.4"
   }
 }

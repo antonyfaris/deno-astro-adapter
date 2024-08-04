@@ -4,6 +4,6 @@
   "private": true,
   "dependencies": {
     "@antonyfaris/deno-astro-adapter": "workspace:*",
-    "astro": "^4.8.3"
+    "astro": "^4.13.1"
   }
 }
